@@ -11,8 +11,8 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
+app.config['MAIL_USERNAME'] = '4gpyrosense@gmail.com'
+app.config['MAIL_PASSWORD'] = 'pyro1234'
 
 mail = Mail(app)
 socketio = SocketIO(app)
@@ -28,6 +28,7 @@ def get_db_connection():
 
 @app.route('/')
 def home():
+    location = request.args.get('location')
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,7 +85,7 @@ def send_alert(user):
     socketio.emit('fire_alert', {'location': location, 'google_maps_link': google_maps_link}, namespace='/alert')
 
     # Send an email notification
-    msg = Message('Fire Alert', sender='noreply@demo.com', recipients=[user['email']])
+    msg = Message('Fire Alert', sender='4gpyrosense@gmail.com', recipients=[user['email']])
     msg.body = f'Fire detected at your house location: {location}. Please evacuate immediately!\nGoogle Maps link: {google_maps_link}'
     mail.send(msg)
 

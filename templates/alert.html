@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <style>
+        #alert-container {
+            display: none;
+            background-color: red;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 24px;
+        }
+    </style>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var socket = io.connect('http://' + document.domain + ':' + location.port + '/alert');
+
+            socket.on('fire_alert', function(data) {
+                var alertContainer = document.getElementById('alert-container');
+                alertContainer.style.display = 'block';
+                alertContainer.innerHTML = `Fire detected at your house location: ${data.location}<br><a href="${data.google_maps_link}" target="_blank">View on Google Maps</a>`;
+
+                var audio = new Audio('{{ url_for("static", filename="alert.mp3") }}');
+                audio.play();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="alert-container">Fire Alert!</div>
+</body>
+</html>
